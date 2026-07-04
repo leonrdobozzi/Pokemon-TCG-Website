@@ -4,7 +4,7 @@ import { CardData } from "../types/CardData";
 
 import { Search, Filter, X, Plus } from "lucide-react";
 import { cn } from "../helpers/cn";
-import { TCGCard } from "../functions/TCGCard";
+import { TCGCard } from "../components/TCGCard/TCGCard";
 
 import { motion, AnimatePresence } from "motion/react";
 

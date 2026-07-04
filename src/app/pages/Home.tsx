@@ -19,7 +19,7 @@ import {
   Check,
   X,
 } from "lucide-react";
-import { TCGCard } from "../functions/TCGCard";
+import { TCGCard } from "../components/TCGCard/TCGCard";
 import { tierColor } from "../functions/TierColor";
 import { cn } from "../helpers/cn";
 import { GROUPS } from "../data/Groups";

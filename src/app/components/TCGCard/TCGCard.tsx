@@ -1,11 +1,11 @@
-import { TYPE_STYLE } from "../data/TypeStyle";
-import { CardData } from "../types/CardData";
+import { TYPE_STYLE } from "../../data/TypeStyle";
+import { CardData } from "../../types/CardData";
 
 import { motion } from "motion/react";
 import { useState } from "react";
-import { rarityLabel } from "./RarityLabel";
+import { rarityLabel } from "../../functions/RarityLabel";
 
-import TypeIcon from "../components/TypeIcon/TypeIcon";
+import TypeIcon from "../TypeIcon/TypeIcon";
 
 export function TCGCard({
   card,
