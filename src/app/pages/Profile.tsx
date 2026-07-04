@@ -53,7 +53,7 @@ export function ProfilePage({ cards }: { cards: CardData[] }) {
       label: "World Qualifier",
       icon: <Zap size={14} />,
       color: "#ec4899",
-      unlocked: false,
+      unlocked: true,
     },
   ];
 

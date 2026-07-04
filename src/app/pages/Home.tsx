@@ -3,28 +3,15 @@ import { CHAMPIONSHIPS } from "../data/Championships";
 import { POSTS } from "../data/Posts";
 import { CardData } from "../types/CardData";
 import { Tab } from "../types/Tab";
-import TCGdex from "@tcgdex/sdk";
 
-import {
-  Layers,
-  Trophy,
-  Zap,
-  MapPin,
-  Calendar,
-  MessageSquare,
-  ChevronRight,
-  Crown,
-  TrendingUp,
-  Heart,
-  Check,
-  X,
-} from "lucide-react";
+import { Zap, MessageSquare, ChevronRight, Heart } from "lucide-react";
 import { TCGCard } from "../components/TCGCard/TCGCard";
-import { tierColor } from "../functions/TierColor";
-import { cn } from "../helpers/cn";
 import { GROUPS } from "../data/Groups";
-
-import { motion, AnimatePresence } from "motion/react";
+import { getAllCards } from "../functions/GetAllCardsLength";
+import StatsRow from "../components/StatsRow/StatsRow";
+import { HeroBanner } from "../components/HeroBanner/HeroBanner";
+import { UpcomingEvents } from "../components/UpcomingEvents/UpcomingEvents";
+import { RecentCards } from "../components/RecentCards/RecentCards";
 
 export function HomePage({
   setTab,
@@ -44,21 +31,12 @@ export function HomePage({
 
   const [totalCards, setTotalCards] = useState<number | null>(null);
 
-  const [selected, setSelected] = useState<CardData | null>(null);
-
   useEffect(() => {
-    console.log("Selected card:", selected);
-  }, [selected]);
-
-  async function getAllCards() {
-    const tcgdexall = new TCGdex("en");
-    const card = await tcgdexall.card.list();
-    setTotalCards(card.length);
-  }
-
-  getAllCards();
+    getAllCards().then(setTotalCards);
+  }, []);
 
   const allCards: number = totalCards ?? 0;
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-10">
       {/* hero banner */}
@@ -116,225 +94,18 @@ export function HomePage({
           </div>
         </div>
       </div>
+      <HeroBanner featured={featured} setTab={setTab} />
 
       {/* stats row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          {
-            label: "Cards Owned",
-            value: owned.length,
-            icon: <Layers size={18} />,
-            color: "#ffcb05",
-            sub: `of ${allCards} tracked`,
-          },
-          {
-            label: "Collection Value",
-            value: `$${totalValue.toFixed(0)}`,
-            icon: <TrendingUp size={18} />,
-            color: "#10b981",
-            sub: "+12% this month",
-          },
-          {
-            label: "Championship Points",
-            value: "1,240",
-            icon: <Trophy size={18} />,
-            color: "#a855f7",
-            sub: "Season total",
-          },
-          {
-            label: "World Ranking",
-            value: "#347",
-            icon: <Crown size={18} />,
-            color: "#f97316",
-            sub: "Top 5%",
-          },
-        ].map((s) => (
-          <div
-            key={s.label}
-            className="rounded-xl border border-border bg-card p-5 space-y-2"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
-                {s.label}
-              </span>
-              <span style={{ color: s.color }}>{s.icon}</span>
-            </div>
-            <p
-              className="text-2xl font-black text-foreground"
-              style={{ fontFamily: "'Exo 2', sans-serif" }}
-            >
-              {s.value}
-            </p>
-            <p className="text-xs text-muted-foreground">{s.sub}</p>
-          </div>
-        ))}
-      </div>
+      <StatsRow owned={owned} totalValue={totalValue} allCards={allCards} />
 
       {/* recent additions + upcoming events */}
       <div className="grid md:grid-cols-5 gap-6">
         {/* recent cards */}
-        <div className="md:col-span-3 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2
-              className="font-bold text-foreground"
-              style={{ fontFamily: "'Exo 2', sans-serif" }}
-            >
-              Recent Additions
-            </h2>
-            <button
-              onClick={() => setTab("collection")}
-              className="text-xs text-primary font-semibold hover:underline flex items-center gap-1"
-            >
-              See all <ChevronRight size={12} />
-            </button>
-          </div>
-          <div className="grid grid-cols-4 gap-3">
-            {cards
-              .filter((c) => c.owned)
-              .slice(0, 4)
-              .map((c) => (
-                <div
-                  onClick={() => setSelected(c)}
-                  key={c.id}
-                  className="cursor-pointer"
-                >
-                  <TCGCard key={c.id} card={c} compact />
-                </div>
-              ))}
-          </div>
-        </div>
-
+        <RecentCards cards={cards} setTab={setTab} />
         {/* upcoming events */}
-        <div className="md:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2
-              className="font-bold text-foreground"
-              style={{ fontFamily: "'Exo 2', sans-serif" }}
-            >
-              Upcoming Events
-            </h2>
-            <button
-              onClick={() => setTab("championships")}
-              className="text-xs text-primary font-semibold hover:underline flex items-center gap-1"
-            >
-              See all <ChevronRight size={12} />
-            </button>
-          </div>
-          <div className="space-y-3">
-            {upcoming.map((ev) => (
-              <div
-                key={ev.id}
-                className="rounded-xl border border-border bg-card p-4 space-y-2 hover:border-primary/30 transition-colors cursor-pointer"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <p className="text-sm font-semibold text-foreground leading-tight">
-                    {ev.name}
-                  </p>
-                  <span
-                    className={cn(
-                      "text-[10px] font-bold px-2 py-0.5 rounded-full border flex-shrink-0",
-                      tierColor(ev.tier),
-                    )}
-                  >
-                    {ev.tier}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <Calendar size={11} />
-                    {ev.date}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MapPin size={11} />
-                    {ev.loc}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-primary">
-                    {ev.prize}
-                  </span>
-                  {ev.reg && (
-                    <span className="text-[10px] text-green-400 font-semibold flex items-center gap-1">
-                      <Check size={10} />
-                      Registered
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <UpcomingEvents upcoming={upcoming} setTab={setTab} />
       </div>
-
-      {/* card detail modal */}
-      <AnimatePresence>
-        {selected && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-            onClick={() => setSelected(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="bg-card border border-border rounded-2xl p-6 max-w-sm w-full"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3
-                    className="text-lg font-black text-foreground"
-                    style={{ fontFamily: "'Exo 2', sans-serif" }}
-                  >
-                    {selected.name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {selected.set} · {selected.num}
-                  </p>
-                </div>
-                <button
-                  onClick={() => setSelected(null)}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <X size={18} />
-                </button>
-              </div>
-              <div className="w-48 mx-auto mb-5">
-                <TCGCard card={selected} />
-              </div>
-              <div className="space-y-3 text-sm">
-                {[
-                  ["Type", selected.type],
-                  ["HP", `${selected.hp} HP`],
-                  ["Rarity", selected.rarity],
-                  ["Condition", selected.cond ?? "—"],
-                  [
-                    "PSA Grade",
-                    selected.grade ? `PSA ${selected.grade}` : "Ungraded",
-                  ],
-                  ["Market Value", `$${selected.value.toFixed(2)}`],
-                ].map(([k, v]) => (
-                  <div key={k} className="flex justify-between">
-                    <span className="text-muted-foreground">{k}</span>
-                    <span className="font-semibold text-foreground">{v}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="flex gap-3 mt-5">
-                <button className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground font-bold text-sm">
-                  List for Trade
-                </button>
-                <button className="px-4 py-2 rounded-lg bg-secondary border border-border text-sm font-semibold text-foreground">
-                  Edit
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* community activity */}
       <div className="space-y-4">
