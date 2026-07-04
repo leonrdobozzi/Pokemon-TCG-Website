@@ -6,13 +6,10 @@ import { Search, Filter, X, Plus } from "lucide-react";
 import { cn } from "../helpers/cn";
 import { TCGCard } from "../components/TCGCard/TCGCard";
 
-import { motion, AnimatePresence } from "motion/react";
-
 export function CollectionPage({ cards }: { cards: CardData[] }) {
   const [filter, setFilter] = useState<CardFilter>("all");
   const [typeFilter, setTypeFilter] = useState("All");
   const [search, setSearch] = useState("");
-  const [selected, setSelected] = useState<CardData | null>(null);
 
   const types = [
     "All",
@@ -117,9 +114,7 @@ export function CollectionPage({ cards }: { cards: CardData[] }) {
       {/* card grid */}
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
         {filtered.map((card) => (
-          <div key={card.id} onClick={() => setSelected(card)}>
-            <TCGCard card={card} compact />
-          </div>
+          <TCGCard key={card.id} card={card} compact />
         ))}
         {filtered.length === 0 && (
           <div className="col-span-full py-20 text-center text-muted-foreground text-sm">
@@ -127,76 +122,6 @@ export function CollectionPage({ cards }: { cards: CardData[] }) {
           </div>
         )}
       </div>
-
-      {/* card detail modal */}
-      <AnimatePresence>
-        {selected && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-            onClick={() => setSelected(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="bg-card border border-border rounded-2xl p-6 max-w-sm w-full"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3
-                    className="text-lg font-black text-foreground"
-                    style={{ fontFamily: "'Exo 2', sans-serif" }}
-                  >
-                    {selected.name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {selected.set} · {selected.num}
-                  </p>
-                </div>
-                <button
-                  onClick={() => setSelected(null)}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <X size={18} />
-                </button>
-              </div>
-              <div className="w-48 mx-auto mb-5">
-                <TCGCard card={selected} />
-              </div>
-              <div className="space-y-3 text-sm">
-                {[
-                  ["Type", selected.type],
-                  ["HP", `${selected.hp} HP`],
-                  ["Rarity", selected.rarity],
-                  ["Condition", selected.cond ?? "—"],
-                  [
-                    "PSA Grade",
-                    selected.grade ? `PSA ${selected.grade}` : "Ungraded",
-                  ],
-                  ["Market Value", `$${selected.value.toFixed(2)}`],
-                ].map(([k, v]) => (
-                  <div key={k} className="flex justify-between">
-                    <span className="text-muted-foreground">{k}</span>
-                    <span className="font-semibold text-foreground">{v}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="flex gap-3 mt-5">
-                <button className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground font-bold text-sm">
-                  List for Trade
-                </button>
-                <button className="px-4 py-2 rounded-lg bg-secondary border border-border text-sm font-semibold text-foreground">
-                  Edit
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
