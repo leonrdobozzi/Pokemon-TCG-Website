@@ -6,7 +6,7 @@ export async function buildCardDataFromApi(
   index: number,
 ): Promise<CardData> {
   const apiCard = card as Record<string, any>;
-
+  console.log(apiCard.image);
   const typeName =
     Array.isArray(apiCard.types) && apiCard.types.length
       ? apiCard.types[0]
@@ -25,6 +25,8 @@ export async function buildCardDataFromApi(
       0,
   );
 
+  const image = apiCard.image + "/high.webp";
+
   return {
     id: index + 1,
     name: apiCard.name ?? "Unknown Card",
@@ -41,5 +43,6 @@ export async function buildCardDataFromApi(
     gv: typeStyle.glow,
     gt: "#0f172a",
     ac: typeStyle.glow,
+    img: image,
   };
 }

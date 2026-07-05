@@ -30,7 +30,7 @@ export function HeroBanner({
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/15 border border-primary/30">
             <Zap size={12} className="text-primary" />
             <span className="text-xs font-semibold text-primary tracking-wide uppercase">
-              Season 2025 · Active
+              Season 2026 · Active
             </span>
           </div>
           <h1
@@ -48,13 +48,13 @@ export function HeroBanner({
           <div className="flex gap-3 flex-wrap">
             <button
               onClick={() => setTab("collection")}
-              className="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 transition-colors"
+              className="px-5 py-2.5 cursor-pointer rounded-lg bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 transition-colors hover:scale-[1.02] active:scale-[0.98] transition-transform"
             >
               View Collection
             </button>
             <button
               onClick={() => setTab("championships")}
-              className="px-5 py-2.5 rounded-lg bg-secondary border border-border text-foreground font-bold text-sm hover:bg-secondary/80 transition-colors"
+              className="px-5 py-2.5 cursor-pointer rounded-lg bg-secondary border border-border text-foreground font-bold text-sm hover:bg-secondary/80 transition-colors hover:scale-[1.02] active:scale-[0.98] transition-transform"
             >
               Tournaments
             </button>

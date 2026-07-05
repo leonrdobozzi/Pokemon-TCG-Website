@@ -14,4 +14,5 @@ export type CardData = {
   gv: string;
   gt: string;
   ac: string;
+  img: string;
 };

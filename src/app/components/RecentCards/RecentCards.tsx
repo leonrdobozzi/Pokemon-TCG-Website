@@ -20,7 +20,7 @@ export function RecentCards({
         </h2>
         <button
           onClick={() => setTab("collection")}
-          className="text-xs text-primary font-semibold hover:underline flex items-center gap-1"
+          className="text-xs cursor-pointer text-primary font-semibold hover:underline flex items-center gap-1 hover:opacity-80 transition-opacity"
         >
           See all <ChevronRight size={12} />
         </button>

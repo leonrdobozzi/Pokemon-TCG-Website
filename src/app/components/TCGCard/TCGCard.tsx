@@ -20,7 +20,7 @@ export function TCGCard({
 }) {
   const [hovered, setHovered] = useState(false);
   const [selected, setSelected] = useState<CardData | null>(null);
-
+  console.log("cards: ", card);
   return (
     <>
       <motion.div
@@ -32,17 +32,21 @@ export function TCGCard({
         transition={{ type: "spring", stiffness: 400, damping: 28 }}
         onHoverStart={() => setHovered(true)}
         onHoverEnd={() => setHovered(false)}
-        className="relative rounded-xl overflow-hidden cursor-pointer select-none"
-        style={{ aspectRatio: "63/88" }}
+        className={`relative rounded-xl overflow-hidden cursor-pointer select-none background-image bg-[url(${card.img})]`}
+        style={{
+          aspectRatio: "63/88",
+          // TODO: Adjust this functionality to use the actual card image from the API
+          backgroundImage: `url(${card.img}) center/cover no-repeat`,
+        }}
         onClick={() => modal && setSelected(card)}
       >
         {/* gradient base */}
-        <div
+        {/* <div
           className="absolute inset-0"
           style={{
-            background: `linear-gradient(145deg, ${card.gf}, ${card.gv} 55%, ${card.gt})`,
+            // background: `linear-gradient(145deg, ${card.gf}, ${card.gv} 55%, ${card.gt})`,
           }}
-        />
+        /> */}
 
         {/* holographic shimmer */}
         <div
